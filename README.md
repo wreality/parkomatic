@@ -2,12 +2,12 @@
 ![alt text](https://github.com/wreality/parkomatic/raw/master/pass-example-small.png "Example Parking Pass")
 
 ## Background
-Parkomatic was created to allow members at [our makerspace](https://www.lansingmakersnetwork.org) to tags to attach to their belongings that didn't fit in their member storage area.   It's probably pretty specific to LMN and how we do things, but the basic code could be useful to someone else, so enjoy.
+Parkomatic was created to allow members at [our makerspace](https://www.lansingmakersnetwork.org) to print tags to attach to their belongings that didn't fit in their member storage area.   It's probably pretty specific to LMN and how we do things, but the basic code could be useful to someone else, so enjoy.
 
 ## How it works
 
 1. The member scans their card at the reader attached to a Raspberry PI
-2. A python scripts pings an URL on our member management server which returns an image of the label to be printed. (expiration dates, name, etc)
+2. A python script pings an URL on our member management server which returns an image of the label to be printed. (expiration dates, name, etc)
 3. A print job is sent to CUPs which sends the image to the Brother QL-700 label printer.
 
 ## Prerequisites
