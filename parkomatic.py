@@ -69,7 +69,7 @@ class PassPrinter:
 		self.printer = printers.keys()[0]
 		
 		#Create the RFID input device
-        self.rfidDevice = InputDevice(self.rfidPath)
+		self.rfidDevice = InputDevice(self.rfidPath)
 		print "STARTED: Waiting for input."
 
 	def getImage(self, keyNum):
