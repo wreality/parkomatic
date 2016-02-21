@@ -9,6 +9,7 @@ import time
 from datetime import datetime
 from evdev import InputDevice
 from select import select
+import ConfigParser
 
 class PassPrinter:
 	conn = None
@@ -18,11 +19,11 @@ class PassPrinter:
 	rfidDevice = None
 	rfidPath = '/dev/input/event0'
 	URL = ""
-	confFileLoction = '/etc/parkomatic/parkomatic.conf'
+	configFileLocation = '/etc/parkomatic/parkomatic.conf'
 	config = None
 
 	def __init__(self):
-		self.confFileLocation = os.getenv('CONFFILE', self.confFileLocation)
+		self.configFileLocation = os.getenv('CONFFILE', self.configFileLocation)
 		self.config = ConfigParser.ConfigParser()
 		#Try to load config file
 		
@@ -49,7 +50,7 @@ class PassPrinter:
 		
 		#Try to create the tmp location if it doesn't exist
 		if not os.path.exists(self.tmpLocation):
-			os.makedirs(tmpLocation)
+			os.makedirs(self.tmpLocation)
 		
 		#Make a connection to the CUPS server
 		try:
@@ -84,23 +85,23 @@ class PassPrinter:
 			
 		if not self.URL:
 			print 'ERROR: Unable to locate file, and URL fetching not configured'
-			return false	
+			return False	
 		
 		if (self.URL and "<CARDNUM>" not in self.URL):
 			print 'ERROR: <CARDNUM> placeholder not found in URL config'
-			return false
+			return False
 		
 		try:
 			print "GET: "+str(keyNum)+" [Downloading new file]"
 			url = self.URL.replace('<CARDNUM>', str(keyNum))
-			file = urllib2.urlopen(url)
+			uh = urllib2.urlopen(url)
 		except:
 			print "NOTFOUND: "+str(keyNum)+" [Server responded non-200]"
-			return false
+			return False
 		CHUNK = 16 * 1024
 		with open(filename, 'wb') as f:
 			while True:
-				chunk = file.read(CHUNK)
+				chunk = uh.read(CHUNK)
 				if not chunk: break
 				f.write(chunk) 
 			f.close()
