@@ -18,8 +18,7 @@ Its probably best to get printing from CUPS working on your Raspberry PI first. 
 We used a pretty standard (read: cheap) USB RFID reader from Amazon.  It attaches as a HID device and then we use evdev to read keystrokes.
 
 ### Raspberry PI
-There are a number of python dependencies that have to be installed.  Some of them straight forward (cups) others not (evdev).  Eventually we'll add a tutorial on installing all of those libraries.
-
+Step-by-step installation instructions are here: https://github.com/wreality/parkomatic/raw/master/INSTALLTION.md
 ## Installation
 There's an installation script included which should copy everything to where it needs to be:
 ```
