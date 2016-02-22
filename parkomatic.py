@@ -10,6 +10,10 @@ from datetime import datetime
 from evdev import InputDevice
 from select import select
 import ConfigParser
+try:
+	import piglow
+except:
+	pass
 
 class PassPrinter:
 	conn = None
@@ -21,6 +25,7 @@ class PassPrinter:
 	URL = ""
 	configFileLocation = '/etc/parkomatic/parkomatic.conf'
 	config = None
+	piGlowEnable = False
 
 	def __init__(self):
 		self.configFileLocation = os.getenv('CONFFILE', self.configFileLocation)
@@ -48,6 +53,13 @@ class PassPrinter:
 		except:
 			pass
 		
+		try:
+			piglow_val = self.config.get('Parkomatic', 'piglow')
+			if piglow_val == "enable":
+				self.piGlowEnable = True
+		except:
+			 pass
+		
 		#Try to create the tmp location if it doesn't exist
 		if not os.path.exists(self.tmpLocation):
 			os.makedirs(self.tmpLocation)
@@ -72,9 +84,28 @@ class PassPrinter:
 		#Create the RFID input device
 		self.rfidDevice = InputDevice(self.rfidPath)
 		print "STARTED: Waiting for input."
+		if self.piGlowEnable:
+			piglow.auto_update = True;
+			piglow.all(0)
+			piglow.red(255)
+			time.sleep(0.1)
+			piglow.red(0)
+			piglow.green(255)
+			time.sleep(0.1)
+			piglow.green(0)
+			piglow.yellow(255)
+			time.sleep(0.1)
+			piglow.white(255)
+			piglow.yellow(0)
+			time.sleep(0.1)
+			piglow.white(0)
+			
 
 	def getImage(self, keyNum):
 		filename = self.tmpLocation + str(keyNum) + ".png"
+		if self.piGlowEnable:
+			piglow.all(0)
+			piglow.yellow(255)
 		if (os.path.isfile(filename)):
 			if (datetime.fromtimestamp(os.path.getctime(filename)).date() < datetime.today().date()):
 				print "DELETE: "+str(keyNum)+", [File older than today]"
@@ -108,9 +139,20 @@ class PassPrinter:
 		print "WROTE: "+filename
 		return filename
 	def printFile(self, filename):
+		if self.piGlowEnable:
+			piglow.all(0)
 		if filename is not False:
+			if self.piGlowEnable:
+				piglow.green(255)
 			print "PRINT: "+ str(filename) + " [Sent to printer]"
 			self.conn.printFile(self.printer, filename, "Test", {"CutMedia": "2"})
+		else:
+			if self.piGlowEnable:
+				piglow.red(255);
+		if self.piGlowEnable:
+			time.sleep(2)
+			piglow.all(0)
+			piglow.show()
 
 	def mainLoop(self):
 		lastKey = 0

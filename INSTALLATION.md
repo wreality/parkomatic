@@ -58,3 +58,8 @@ sudo service parkomatic start
 
 
 
+### Configuring PiGlow (OPTIONAL)
+```
+curl get.pimoroni.com/piglow | bash
+```
+Edit /etc/parkomatic/parkomatic.conf and change piglow=disabled to piglow=enabled 
